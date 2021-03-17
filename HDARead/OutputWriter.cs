@@ -289,7 +289,7 @@ namespace HDARead
                                 _writer.Write("{0}", Utils.GetDatetimeStr(OPCHDAItemValues[0][j].Timestamp, _OutputTimestampFormat));
 
                             _writer.Write(valstr,
-                                OPCHDAItemValues[i][j].Value.ToString(),
+                                ((OPCHDAItemValues[i][j].Value == null) ? "" : OPCHDAItemValues[i][j].Value.ToString()),
                                 OPCHDAItemValues[i][j].Quality.ToString(),
                                 OPCHDAItemValues[i][j].HistorianQuality.ToString());
                         }

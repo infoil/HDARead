@@ -41,7 +41,7 @@ namespace HDARead
         static string EndTime = "NOW";
         static int Aggregate = (int)HDAClient.OPCHDA_AGGREGATE.AVERAGE;
         static string OutputTimestampFormat = null;
-        static int MaxValues = int.MaxValue; 
+        static int MaxValues = -1; // int.MaxValue; 
         static int ResampleInterval = 0;
         static bool IncludeBounds = false; // 
         static string OutputFileName = null;
@@ -123,7 +123,7 @@ namespace HDARead
                 { "raw",                    "Read raw data (if omitted, read processed data) ",
                                                                                 v => ReadRaw = v != null},
                 { "m=|maxvalues=",          "Maximum number of values to load (only for ReadRaw)",
-                                                                                v => MaxValues = Int32.Parse(v)},
+                                                                                m => MaxValues = ParseMaxValues(m)},
                 { "b|bounds",               "Whether the bounding item values should be returned (only for ReadRaw).",  
                                                                                 v => IncludeBounds = v != null},
                 { "t=|tsformat=",           "Output timestamp format to use. You can use -t=DateTime to output date and time in separate columns",  
@@ -160,6 +160,19 @@ namespace HDARead
             return true;
         }
 
+        private static int ParseMaxValues(string strArgument)
+        {
+            int intAnswer = -1;
+            Console.WriteLine($"MaxValues argument: {strArgument}");
+            try
+            {
+                intAnswer = Int32.Parse(strArgument);
+            }
+            catch (Exception e) {
+                Console.WriteLine($"Invalid MaxValues argument: {e.Message}");
+            }
+            return intAnswer;
+        }
 
         static bool CheckOptions() {
             if (Help) {
