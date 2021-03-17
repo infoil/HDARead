@@ -11,6 +11,7 @@
     <AssemblyName>HDARead</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
@@ -23,7 +24,6 @@
     <MapFileExtensions>true</MapFileExtensions>
     <ApplicationRevision>0</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
-    <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
@@ -47,19 +47,19 @@
     <WarningLevel>4</WarningLevel>
     <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject>HDARead.Program</StartupObject>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.VisualBasic" />
     <Reference Include="OpcComRcw, Version=2.0.0.0, Culture=neutral, PublicKeyToken=9a40e993cbface53, processorArchitecture=MSIL">
-      <HintPath>..\packages\OpcComRcw.2.1.107\lib\net40\OpcComRcw.dll</HintPath>
-      <Private>True</Private>
+      <HintPath>..\packages\OpcComRcw.2.1.108\lib\net40\OpcComRcw.dll</HintPath>
     </Reference>
     <Reference Include="OpcNetApi, Version=2.1.0.0, Culture=neutral, PublicKeyToken=9a40e993cbface53, processorArchitecture=MSIL">
-      <HintPath>..\packages\OpcNetApi.2.1.107\lib\net40\OpcNetApi.dll</HintPath>
-      <Private>True</Private>
+      <HintPath>..\packages\OpcNetApi.2.1.108\lib\net40\OpcNetApi.dll</HintPath>
     </Reference>
     <Reference Include="OpcNetApi.Com, Version=2.1.0.0, Culture=neutral, PublicKeyToken=9a40e993cbface53, processorArchitecture=MSIL">
-      <HintPath>..\packages\OpcNetApi.Com.2.1.107\lib\net40\OpcNetApi.Com.dll</HintPath>
-      <Private>True</Private>
+      <HintPath>..\packages\OpcNetApi.Com.2.1.108\lib\net40\OpcNetApi.Com.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
