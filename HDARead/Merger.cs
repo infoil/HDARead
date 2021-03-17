@@ -1,13 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 using System.Diagnostics;
-using Microsoft.VisualBasic.Logging;
 
-namespace HDARead {
+namespace HDARead
+{
     static class Merger {
         static TraceSource _trace = new TraceSource("MergerTraceSource");
 
@@ -17,7 +14,8 @@ namespace HDARead {
         }
 
         // Merge multiple timeseries. Fill with NaN.
-        public static Opc.Hda.ItemValueCollection[] Merge(Opc.Hda.ItemValueCollection[] OPCHDAItemValues) {
+        public static Opc.Hda.ItemValueCollection[] Merge(Opc.Hda.ItemValueCollection[] OPCHDAItemValues)
+        {
             int n_tags = OPCHDAItemValues.Count();
             _trace.TraceEvent(TraceEventType.Verbose, 0, "Starting merge. n_tags = {0}", n_tags);
             var MergedValues = new Opc.Hda.ItemValueCollection[n_tags];

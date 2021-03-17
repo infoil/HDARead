@@ -2,11 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 using NDesk.Options;
-using Opc;
-using OpcCom;
 using System.Diagnostics;
 using System.IO;
 using System.Reflection;
@@ -23,7 +20,8 @@ using System.Reflection;
  * use job configuration file instead of specifying all parameters in command line
  * * */
 
-namespace HDARead {
+namespace HDARead
+{
 
     public enum eOutputFormat {
         LIST = 1,
@@ -112,19 +110,19 @@ namespace HDARead {
 
         // If parsing was unsuccessfull, return false
         static bool ParseCommandLine(string[] args) {
-             var p = new OptionSet() {
-   	            { "n=|node=",               "Remote computer name (optional)",  v => Host = v },
-   	            { "s=|server=",             "OPC HDA server name (required)",   v => Server = v },
-   	            { "from=|start=|begin=",    "Start time (abs. or relative), default NOW-1H",    
+            var p = new OptionSet() {
+                   { "n=|node=",               "Remote computer name (optional)",  v => Host = v },
+                   { "s=|server=",             "OPC HDA server name (required)",   v => Server = v },
+                   { "from=|start=|begin=",    "Start time (abs. or relative), default NOW-1H",
                                                                                 v => StartTime = v ?? "NOW-1H"},
-   	            { "to=|end=",               "End time (abs. or relative), default NOW",      
+                   { "to=|end=",               "End time (abs. or relative), default NOW",
                                                                                 v => EndTime = v ?? "NOW"},
-   	            { "a=|agg=",                "Aggregate (see spec)",             v => Aggregate = Utils.GetHDAAggregate(v) },
-                { "r=|resample=",           "Resample interval (in seconds), 0 - return just one value (see OPC HDA spec.)",  
+                   { "a=|agg=",                "Aggregate (see spec)",             v => Aggregate = Utils.GetHDAAggregate(v) },
+                { "r=|resample=",           "Resample interval (in seconds), 0 - return just one value (see OPC HDA spec.)",
                                                                                 v => ResampleInterval = Int32.Parse(v)},
-                { "raw",                    "Read raw data (if omitted, read processed data) ",  
+                { "raw",                    "Read raw data (if omitted, read processed data) ",
                                                                                 v => ReadRaw = v != null},
-                { "m=|maxvalues=",          "Maximum number of values to load (only for ReadRaw)", 
+                { "m=|maxvalues=",          "Maximum number of values to load (only for ReadRaw)",
                                                                                 v => MaxValues = Int32.Parse(v)},
                 { "b|bounds",               "Whether the bounding item values should be returned (only for ReadRaw).",  
                                                                                 v => IncludeBounds = v != null},

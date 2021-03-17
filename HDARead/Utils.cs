@@ -1,13 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 using Opc;
-using OpcCom;
 
-namespace HDARead {
+namespace HDARead
+{
     static class Utils {
 
         static public int GetHDAAggregate(string str) {

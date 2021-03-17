@@ -1,16 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-using Opc;
-using OpcCom;
 
 using System.Diagnostics;
-using Microsoft.VisualBasic.Logging;
 
-namespace HDARead {
+namespace HDARead
+{
     class HDAClient {
 
         private Opc.Hda.Server _OPCServer = null;
@@ -92,35 +87,35 @@ namespace HDARead {
                     _trace.TraceEvent(TraceEventType.Verbose, 0, "Succesfully connected to {0}, obj: {1}", url.ToString(), _OPCServer.GetHashCode().ToString());
                 }
 
-                Status = _OPCServer.GetStatus();
-                _trace.TraceEvent(TraceEventType.Verbose, 0, "OPC server status:\n"+
-                    "\tCurrentTime:     {0}\n"+
-                    "\tMaxReturnValues: {1}\n" +
-                    "\tProductVersion:  {2}\n" +
-                    "\tServerState:     {3}\n" +
-                    "\tStartTime:       {4}\n" +
-                    "\tStatusInfo:      {5}\n" +
-                    "\tVendorInfo:      {6}\n", 
-                    Status.CurrentTime,
-                    Status.MaxReturnValues,
-                    Status.ProductVersion,
-                    Status.ServerState,
-                    Status.StartTime,
-                    Status.StatusInfo,
-                    Status.VendorInfo);
+                    Status = _OPCServer.GetStatus();
+                    _trace.TraceEvent(TraceEventType.Verbose, 0, "OPC server status:\n" +
+                        "\tCurrentTime:     {0}\n" +
+                        "\tMaxReturnValues: {1}\n" +
+                        "\tProductVersion:  {2}\n" +
+                        "\tServerState:     {3}\n" +
+                        "\tStartTime:       {4}\n" +
+                        "\tStatusInfo:      {5}\n" +
+                        "\tVendorInfo:      {6}\n",
+                        Status.CurrentTime,
+                        Status.MaxReturnValues,
+                        Status.ProductVersion,
+                        Status.ServerState,
+                        Status.StartTime,
+                        Status.StatusInfo,
+                        Status.VendorInfo);
 
-                _trace.TraceEvent(TraceEventType.Verbose, 0, "SupportedAggregates:");
-                SupportedAggregates = _OPCServer.GetAggregates();
-                foreach (Opc.Hda.Aggregate agg in SupportedAggregates) {
-                    _trace.TraceEvent(TraceEventType.Verbose, 0, "{0}\t{1}\t{2}", agg.ID, agg.Name, agg.Description);
-                }
-
-
-            } catch (Exception e) {
+                    _trace.TraceEvent(TraceEventType.Verbose, 0, "SupportedAggregates:");
+                    SupportedAggregates = _OPCServer.GetAggregates();
+                    foreach (Opc.Hda.Aggregate agg in SupportedAggregates)
+                    {
+                        _trace.TraceEvent(TraceEventType.Verbose, 0, "{0}\t{1}\t{2}", agg.ID, agg.Name, agg.Description);
+                    }
+            }
+            catch (Exception e)
+            {
                 _trace.TraceEvent(TraceEventType.Error, 0, "Connection failed: {0}, {1}", url.ToString(), e.Message);
                 return false;
             }
-
             return true;
         }
 
@@ -203,9 +198,9 @@ namespace HDARead {
             try {
                 if (read_raw) {
                     if (MaxValues > Status.MaxReturnValues) {
-                        _trace.TraceEvent(TraceEventType.Verbose, 0, "MaxValue was set to {0} (server cannot return more).", Status.MaxReturnValues);
-                        MaxValues = Status.MaxReturnValues;
-                    }
+                            _trace.TraceEvent(TraceEventType.Verbose, 0, "MaxValue was set to {0} (server cannot return more).", Status.MaxReturnValues);
+                            MaxValues = Status.MaxReturnValues;
+                        }
                     tmpOPCHDAItemValues = _OPCServer.ReadRaw(hdaStartTime, hdaEndTime, MaxValues, IncludeBounds, ItemIDResults);
                     if (OutWriter != null) {
                         OutWriter.WriteHeader(tmpOPCHDAItemValues);
