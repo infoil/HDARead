@@ -192,7 +192,6 @@ namespace HDARead
 
             if (string.IsNullOrEmpty(Server)) {
                 Utils.ConsoleWriteColoredLine(ConsoleColor.Red, "Missing required option s=|server=");
-                Console.WriteLine("Available servers are:");
                 Utils.ListHDAServers(Host);
                 return false;
             }

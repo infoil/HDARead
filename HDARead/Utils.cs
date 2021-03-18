@@ -58,13 +58,21 @@ namespace HDARead
             IDiscovery discovery = new OpcCom.ServerEnumerator();
             Opc.Server[] servers;
 
-            if (string.IsNullOrEmpty(node)) 
-                servers = discovery.GetAvailableServers(Specification.COM_HDA_10);
-            else
-                servers = discovery.GetAvailableServers(Specification.COM_HDA_10, node, null);
-
-            foreach (Opc.Server s in servers) {
-                Console.WriteLine(s.Name);
+            try
+            {
+                if (string.IsNullOrEmpty(node))
+                    servers = discovery.GetAvailableServers(Specification.COM_HDA_10);
+                else
+                    servers = discovery.GetAvailableServers(Specification.COM_HDA_10, node, null);
+                Console.WriteLine("Available servers are:");
+                foreach (Opc.Server s in servers)
+                {
+                    Console.WriteLine(s.Name);
+                }
+            }
+            catch(System.Runtime.InteropServices.ExternalException e)
+            {
+                Console.WriteLine("Error getting available servers: {0}", e.Message);
             }
         }
 
