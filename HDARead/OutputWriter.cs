@@ -16,6 +16,7 @@ namespace HDARead
         protected string _OutputFileName = null;
         protected string _OutputTimestampFormat = null;
         protected bool _ReadRaw = false;
+        protected string _ListSeparator = CultureInfo.CurrentCulture.TextInfo.ListSeparator;
 
         public OutputWriter(eOutputFormat OutputFormat,
                             eOutputQuality OutputQuality,
@@ -92,18 +93,18 @@ namespace HDARead
             try
             {
                 if (_OutputTimestampFormat == "DateTime")
-                    _writer.Write("Date,Time");
+                    _writer.Write("Date{0}Time", _ListSeparator);
                 else
                     _writer.Write("Timestamp");
 
-                string hdr = ",{0}";
+                string hdr = _ListSeparator + "{0}";
                 if ((_OutputQuality == eOutputQuality.DA) || (_OutputQuality == eOutputQuality.BOTH))
                 {
-                    hdr += ",{0} da quality";
+                    hdr += _ListSeparator + "{0} da quality";
                 }
                 if ((_OutputQuality == eOutputQuality.HISTORIAN) || (_OutputQuality == eOutputQuality.BOTH))
                 {
-                    hdr += ",{0} hist quality";
+                    hdr += _ListSeparator + "{0} hist quality";
                 }
                 // header
                 for (int i = 0; i < OPCHDAItemValues.Count(); i++)
@@ -135,40 +136,34 @@ namespace HDARead
                 for (int j = 0; j < OPCHDAItemValues[0].Count; j++)
                 {
                     if (_OutputTimestampFormat == "DateTime")
-                        _writer.Write("{0},{1}",
-                            OPCHDAItemValues[0][j].Timestamp.ToString("MM/dd/yyyy", CultureInfo.InvariantCulture),
-                            OPCHDAItemValues[0][j].Timestamp.ToString("HH:mm:ss", CultureInfo.InvariantCulture));
+                        _writer.Write(
+                                "{0}{1}{2}",
+                                OPCHDAItemValues[0][j].Timestamp.ToString("MM/dd/yyyy", CultureInfo.InvariantCulture),
+                                _ListSeparator,
+                                OPCHDAItemValues[0][j].Timestamp.ToString("HH:mm:ss", CultureInfo.InvariantCulture)
+                            );
                     else
                         _writer.Write("{0}", Utils.GetDatetimeStr(OPCHDAItemValues[0][j].Timestamp, _OutputTimestampFormat));
                     for (int i = 0; i < OPCHDAItemValues.Count(); i++)
                     {
+                        _writer.Write(_ListSeparator);
                         // Maybe its better to catch exception (null ref) than to check every element
                         if (OPCHDAItemValues[i][j].Value == null)
-                        {
-                            _writer.Write(", ");
-                        }
+                            _writer.Write(" ");
                         else
-                        {
-                            _writer.Write(",{0}", OPCHDAItemValues[i][j].Value.ToString());
-                        }
+                            _writer.Write("{0}", OPCHDAItemValues[i][j].Value.ToString());
 
                         if ((_OutputQuality == eOutputQuality.DA) || (_OutputQuality == eOutputQuality.BOTH))
                         {
-                            if (OPCHDAItemValues[i][j].Quality == null)
-                            {
-                                _writer.Write(",");
-                            }
-                            else
-                            {
-                                _writer.Write(",{0}", OPCHDAItemValues[i][j].Quality.ToString());
-                            }
+                            _writer.Write(_ListSeparator);
+                            if (OPCHDAItemValues[i][j].Quality != null)
+                                _writer.Write("{0}", OPCHDAItemValues[i][j].Quality.ToString());
                         }
 
-                        if ((_OutputQuality == eOutputQuality.HISTORIAN) || (_OutputQuality == eOutputQuality.BOTH))
-                        {
+                        if ((_OutputQuality == eOutputQuality.HISTORIAN) || (_OutputQuality == eOutputQuality.BOTH)) {
                             // OPC.DA.Quality is struct, but OPC.HDA.Quality is enum.
                             // Enum cannot be null, so there is no need to check
-                            _writer.Write(",{0}", OPCHDAItemValues[i][j].HistorianQuality.ToString());
+                            _writer.Write("{0}{1}", _ListSeparator, OPCHDAItemValues[i][j].HistorianQuality.ToString());
                         }
                     }
                     _writer.WriteLine();
@@ -213,23 +208,23 @@ namespace HDARead
             {
                 string hdr;
                 if (_OutputTimestampFormat == "DateTime")
-                    hdr = "Date,Time,{0}";
+                    hdr = "Date" + _ListSeparator + "Time" + _ListSeparator + "{0}";
                 else
-                    hdr = "Timestamp,{0}";
+                    hdr = "Timestamp" + _ListSeparator + "{0}";
 
                 if ((_OutputQuality == eOutputQuality.DA) || (_OutputQuality == eOutputQuality.BOTH))
                 {
-                    hdr += ", {0} da quality";
+                    hdr += _ListSeparator + " {0} da quality";
                 }
                 if ((_OutputQuality == eOutputQuality.HISTORIAN) || (_OutputQuality == eOutputQuality.BOTH))
                 {
-                    hdr += ", {0} hist quality";
+                    hdr += _ListSeparator + " {0} hist quality";
                 }
 
                 _writer.Write(hdr, OPCHDAItemValues[0].ItemName);
                 for (int i = 1; i < OPCHDAItemValues.Count(); i++)
                 {
-                    _writer.Write(",");
+                    _writer.Write(_ListSeparator);
                     _writer.Write(hdr, OPCHDAItemValues[i].ItemName);
                 }
                 _writer.WriteLine();
@@ -248,22 +243,20 @@ namespace HDARead
         {
             try
             {
-                string valstr = ",{0}";
-                string emptystr;
+                string valstr = _ListSeparator + "{0}";
+                string emptystr = _ListSeparator;
                 if (_OutputTimestampFormat == "DateTime")
-                    emptystr = ",,";
-                else
-                    emptystr = ",";
+                    emptystr += _ListSeparator;
 
                 if ((_OutputQuality == eOutputQuality.DA) || (_OutputQuality == eOutputQuality.BOTH))
                 {
-                    valstr += ",{1}";
-                    emptystr += ",";
+                    valstr += _ListSeparator + "{1}";
+                    emptystr += _ListSeparator;
                 }
                 if ((_OutputQuality == eOutputQuality.HISTORIAN) || (_OutputQuality == eOutputQuality.BOTH))
                 {
-                    valstr += ",{2}";
-                    emptystr += ",";
+                    valstr += _ListSeparator + "{2}";
+                    emptystr += _ListSeparator;
                 }
 
                 // What if different tags have different number of points?!
@@ -275,15 +268,14 @@ namespace HDARead
                     for (int i = 0; i < OPCHDAItemValues.Count(); i++)
                     {
                         if (i > 0)
-                        {
-                            _writer.Write(",");
-                        }
+                            _writer.Write(_ListSeparator);
 
                         if (j < OPCHDAItemValues[i].Count)
                         {
                             if (_OutputTimestampFormat == "DateTime")
-                                _writer.Write("{0},{1}",
+                                _writer.Write("{0}{1}{2}",
                                     OPCHDAItemValues[0][j].Timestamp.ToString("MM/dd/yyyy", CultureInfo.InvariantCulture),
+                                    _ListSeparator,
                                     OPCHDAItemValues[0][j].Timestamp.ToString("HH:mm:ss", CultureInfo.InvariantCulture));
                             else
                                 _writer.Write("{0}", Utils.GetDatetimeStr(OPCHDAItemValues[0][j].Timestamp, _OutputTimestampFormat));
@@ -342,22 +334,23 @@ namespace HDARead
         {
             try
             {
-                string valstr = ",{0}";
+                string valstr = _ListSeparator + "{0}";
                 if ((_OutputQuality == eOutputQuality.DA) || (_OutputQuality == eOutputQuality.BOTH))
-                    valstr += ",{1}";
+                    valstr += _ListSeparator + "{1}";
                 if ((_OutputQuality == eOutputQuality.HISTORIAN) || (_OutputQuality == eOutputQuality.BOTH))
-                    valstr += ",{2}";
+                    valstr += _ListSeparator + "{2}";
                 foreach (Opc.Hda.ItemValueCollection tagValues in OPCHDAItemValues)
                 {
                     foreach (Opc.Hda.ItemValue tagValue in tagValues)
                     {
                         if (_OutputTimestampFormat == "DateTime")
-                            _writer.Write("{0},{1}",
+                            _writer.Write("{0}{1}{2}",
                                 tagValue.Timestamp.ToString("MM/dd/yyyy", CultureInfo.InvariantCulture),
+                                _ListSeparator,
                                 tagValue.Timestamp.ToString("HH:mm:ss", CultureInfo.InvariantCulture));
                         else
                             _writer.Write("{0}", Utils.GetDatetimeStr(tagValue.Timestamp, _OutputTimestampFormat));
-                        _writer.Write(",{0}", tagValues.ItemName);
+                        _writer.Write("{0}{1}", _ListSeparator, tagValues.ItemName);
                         _writer.Write(valstr,
                             ((tagValue.Value == null) ? "" : tagValue.Value.ToString()),
                             tagValue.Quality.ToString(),
@@ -384,18 +377,14 @@ namespace HDARead
             {
                 string hdr;
                 if (_OutputTimestampFormat == "DateTime")
-                    hdr = "Date,Time";
+                    hdr = "Date" + _ListSeparator + "Time";
                 else
                     hdr = "Timestamp";
-                hdr += ",Tag,Value";
+                hdr += _ListSeparator + "Tag" + _ListSeparator + "Value";
                 if ((_OutputQuality == eOutputQuality.DA) || (_OutputQuality == eOutputQuality.BOTH))
-                {
-                    hdr += ",DA quality";
-                }
+                    hdr += _ListSeparator + "DA quality";
                 if ((_OutputQuality == eOutputQuality.HISTORIAN) || (_OutputQuality == eOutputQuality.BOTH))
-                {
-                    hdr += ",Hist quality";
-                }
+                    hdr += _ListSeparator + "Hist quality";
                 _writer.Write(hdr);
                 _writer.WriteLine();
                 return;
