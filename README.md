@@ -67,35 +67,48 @@ Aggregates
 - INTERPOLATIVE = 1,
 - NOAGGREGATE = 0
 
-Output formats: TABLE, MERGED
------------------------------
+Output formats: TABLE, MERGED, RECORD
+---------------------------------
 
-HDAread can show queried data on console (if no `-o` key specified) or save them to text file (CSV - comma separated value). 
+HDAread can show queried data on console (if no `-o` key specified) or save them to text file (CSV - comma separated value).
 
-There are two output formats supported: TABLE and MERGED.  
-TABLE formatting looks like the following:  
-`Tag1Timestamp, Tag1Value, Tag2Timestamp, Tag2Value, Tag3Timestamp, Tag3Value...`
+There are three output formats supported: TABLE, MERGED and RECORD.
 
-MERGE formatting looks like the following:  
-`Timestamp, Tag1Value, Tag2Value, Tag3Value...`
+TABLE formatting looks like the following:
+```
+Tag1Timestamp, Tag1Value, Tag2Timestamp, Tag2Value, Tag3Timestamp, Tag3Value...
+```
 
-When querying *raw* data from server, server returns individual set of timestamps for each tag, so additional processing is done by HDAread to align different tags to single timeline for MERGED output. 
+MERGED formatting looks like the following:
+```
+Timestamp, Tag1Value, Tag2Value, Tag3Value...
+```
+
+When querying *raw* data from server, server returns individual set of timestamps for each tag, so additional processing is done by HDAread to align different tags to single timeline for MERGED output.
+
+RECORD formatting looks like the following:
+```
+Timestamp1, Tag1, Ts1Tag1Value
+Timestamp1, Tag2, Ts1Tag2Value
+Timestamp2, Tag1, Ts2Tag1Value
+...
+```
 
 There is also an option `-q` to include in the output the quality for each tag.
 
 Output timestamp format ("yyyy-MM-dd hh:mm:ss", "MM/dd/yy hh:mm", etc.) can be specified by using `-t` key. For details on format strings see [1](https://docs.microsoft.com/en-us/dotnet/standard/base-types/standard-date-and-time-format-strings), [2](https://docs.microsoft.com/en-us/dotnet/standard/base-types/custom-date-and-time-format-strings)
 One special format string is -t=DateTime, which outputs date and time in separate columns. The format is fixed: MM/dd/yyyy,HH:mm:ss
- 
+
 Arguments
 ---------
 
 Usage: HDARead [OPTIONS]+ tag1 tag2 tag3 ...
 
-Options:  
+Options:
   -n=VALUE, --node=VALUE
-    
+
         Remote computer name (optional)
-        
+
   -s=VALUE, --server=VALUE
 
         OPC HDA server name (required)
@@ -105,58 +118,58 @@ Options:
         Start time (abs. or relative), default is NOW-1H
 
   --to=VALUE, --end=VALUE
-    
+
         End time (abs. or relative), default is NOW
 
   -a=VALUE, --agg=VALUE
-  
+
         Aggregate for ReadProcessed (see spec)
-   
-   -r=VALUE, --resample=VALUE    
-        
+
+   -r=VALUE, --resample=VALUE
+
         Resample interval for ReadProcessed (in seconds), 0 - return just one value (see OPC HDA spec.)
-        
+
    --raw
-   
+
         Read raw data (if omitted, read processed data)
-   
+
    -m=VALUE, maxvalues=VALUE
-   
+
         Maximum number of values to load for each tag (only for ReadRaw)
-   
+
    -b, --bounds
-        
+
         Whether the bounding item values should be returned (only for ReadRaw)
 
   -t=VALUE, --tsformat=VALUE
-  
+
         Output timestamp format to use
-  
+
   -f=VALUE
-  
-        Output format: TABLE or MERGED (default)
-        
+
+        Output format: MERGED (default), RECORD or TABLE
+
   -q=VALUE
-  
+
         Include quality in output data: NONE (default), DA, HISTORIAN or BOTH
-        
+
   -o=VALUE, --output=VALUE
 
         Output filename (if omitted, output to console)
-        
-  -i=VALUE, --input=VALUE  
-  
+
+  -i=VALUE, --input=VALUE
+
         Input filename with list of tags (if omitted, tag list must be provided as command line argument)
-        
+
   -v
-   
+
         Show extended info
 
 
   -vv, --verbose
-   
+
         Show debug info
-        
+
   -h, -?, --help
 
         Show usage info

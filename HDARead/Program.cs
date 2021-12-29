@@ -42,9 +42,9 @@ namespace HDARead
         static string EndTime = "NOW";
         static int Aggregate = (int)HDAClient.OPCHDA_AGGREGATE.AVERAGE;
         static string OutputTimestampFormat = null;
-        static int MaxValues = -1; // int.MaxValue; 
+        static int MaxValues = -1; // int.MaxValue;
         static int ResampleInterval = 0;
-        static bool IncludeBounds = false; // 
+        static bool IncludeBounds = false; //
         static string OutputFileName = null;
         static string InputFileName = null;
         static bool ReadRaw = false;
@@ -92,7 +92,7 @@ namespace HDARead
                         default:
                             throw (new ArgumentException("Unknown output format"));
                     }
-                    // Read items 
+                    // Read items
                     res = srv.Read(StartTime, EndTime, Tagnames.ToArray(), Aggregate, MaxValues, ResampleInterval, IncludeBounds, ReadRaw, out_writer, out OPCHDAItemValues);
                 } else {
                     Utils.ConsoleWriteColoredLine(ConsoleColor.Red, "HDARead unable to connect to OPC server.");
@@ -115,30 +115,30 @@ namespace HDARead
         // If parsing was unsuccessfull, return false
         static bool ParseCommandLine(string[] args) {
             var p = new OptionSet() {
-                   { "n=|node=",               "Remote computer name (optional)",  v => Host = v },
-                   { "s=|server=",             "OPC HDA server name (required)",   v => Server = v },
-                   { "from=|start=|begin=",    "Start time (abs. or relative), default NOW-1H",
-                                                                                v => StartTime = v ?? "NOW-1H"},
-                   { "to=|end=",               "End time (abs. or relative), default NOW",
-                                                                                v => EndTime = v ?? "NOW"},
-                   { "a=|agg=",                "Aggregate (see spec)",             v => Aggregate = Utils.GetHDAAggregate(v) },
+				{ "n=|node=",               "Remote computer name (optional)",  v => Host = v },
+				{ "s=|server=",             "OPC HDA server name (required)",   v => Server = v },
+				{ "from=|start=|begin=",    "Start time (abs. or relative), default NOW-1H",
+																		        v => StartTime = v ?? "NOW-1H"},
+				{ "to=|end=",               "End time (abs. or relative), default NOW",
+																		        v => EndTime = v ?? "NOW"},
+				{ "a=|agg=",                "Aggregate (see spec)",             v => Aggregate = Utils.GetHDAAggregate(v) },
                 { "r=|resample=",           "Resample interval (in seconds), 0 - return just one value (see OPC HDA spec.)",
                                                                                 v => ResampleInterval = Int32.Parse(v)},
                 { "raw",                    "Read raw data (if omitted, read processed data) ",
                                                                                 v => ReadRaw = v != null},
                 { "m=|maxvalues=",          "Maximum number of values to load (only for ReadRaw)",
                                                                                 m => MaxValues = ParseMaxValues(m)},
-                { "b|bounds",               "Whether the bounding item values should be returned (only for ReadRaw).",  
+                { "b|bounds",               "Whether the bounding item values should be returned (only for ReadRaw).",
                                                                                 v => IncludeBounds = v != null},
-                { "t=|tsformat=",           "Output timestamp format to use. You can use -t=DateTime to output date and time in separate columns",  
+                { "t=|tsformat=",           "Output timestamp format to use. You can use -t=DateTime to output date and time in separate columns",
                                                                                 v => OutputTimestampFormat = v},
-                { "f=",                     "Output format (TABLE or MERGED)",   
+                { "f=",                     "Output format (TABLE, MERGED or RECORD)",
                                                                                 v => OutputFormat = Utils.GetOutputFormat(v)},
-                { "q=",                     "Include quality in output data (NONE, DA, HISTORIAN or BOTH)",   
+                { "q=",                     "Include quality in output data (NONE, DA, HISTORIAN or BOTH)",
                                                                                 v => OutputQuality = Utils.GetOutputQuality(v)},
-                { "o=|output=",             "Output filename (if omitted, output to console)",   
+                { "o=|output=",             "Output filename (if omitted, output to console)",
                                                                                 v => OutputFileName = v},
-                { "i=|input=",              "Input filename with list of tags (if omitted, tag list must be provided as command line argument)",   
+                { "i=|input=",              "Input filename with list of tags (if omitted, tag list must be provided as command line argument)",
                                                                                 v => InputFileName = v},
                 { "v",                      "Show extended info",               v => ExtendedInfo = v != null},
                 { "vv|verbose",             "Show debug info",                  v => Verbose = v != null},
@@ -233,7 +233,7 @@ namespace HDARead
                 Console.WriteLine("\t No more than {0} values for each tag should be loaded.", MaxValues);
                 Console.WriteLine("\t Bounding item values will {0} be included in result.", IncludeBounds ? "" : "not");
             }
-            if (!string.IsNullOrEmpty(OutputTimestampFormat)) 
+            if (!string.IsNullOrEmpty(OutputTimestampFormat))
                 Console.WriteLine("\t Output timestamp format is specified as {0}.", OutputTimestampFormat);
             if (!string.IsNullOrEmpty(OutputFileName))
                 Console.WriteLine("\t The resulting data will be written to file {0}.", OutputFileName);
@@ -269,7 +269,7 @@ namespace HDARead
             foreach (string agg in Enum.GetNames(typeof(HDAClient.OPCHDA_AGGREGATE))) {
                 Console.Write(" " + agg);
             }
-                
+
         }
 
     }
