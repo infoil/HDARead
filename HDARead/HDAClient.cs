@@ -86,8 +86,7 @@ namespace HDARead
                     }
                     _trace.TraceEvent(TraceEventType.Verbose, 0, "Succesfully connected to {0}, obj: {1}", url.ToString(), _OPCServer.GetHashCode().ToString());
                 }
-                try
-                {
+                try {
                     Status = _OPCServer.GetStatus();
                     _trace.TraceEvent(TraceEventType.Verbose, 0, "OPC server status:\n" +
                         "\tCurrentTime:     {0}\n" +
@@ -104,27 +103,19 @@ namespace HDARead
                         Status.StartTime,
                         Status.StatusInfo,
                         Status.VendorInfo);
-                }
-                catch (Exception e)
-                {
+                } catch (Exception e) {
                     _trace.TraceEvent(TraceEventType.Warning, 0, "Can't get server status: {0}, {1}", url.ToString(), e.Message);
                 }
-                try
-                {
+                try {
                     _trace.TraceEvent(TraceEventType.Verbose, 0, "SupportedAggregates:");
                     SupportedAggregates = _OPCServer.GetAggregates();
-                    foreach (Opc.Hda.Aggregate agg in SupportedAggregates)
-                    {
+                    foreach (Opc.Hda.Aggregate agg in SupportedAggregates) {
                         _trace.TraceEvent(TraceEventType.Verbose, 0, "{0}\t{1}\t{2}", agg.ID, agg.Name, agg.Description);
                     }
-                }
-                catch (Exception e)
-                {
+                } catch (Exception e) {
                     _trace.TraceEvent(TraceEventType.Warning, 0, "Can't get server supported aggregates: {0}, {1}", url.ToString(), e.Message);
                 }
-            }
-            catch (Exception e)
-            {
+            } catch (Exception e) {
                 _trace.TraceEvent(TraceEventType.Error, 0, "Connection failed: {0}, {1}", url.ToString(), e.Message);
                 return false;
             }
